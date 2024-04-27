@@ -1,6 +1,6 @@
-| <h2>Hospital Management System</h2> |
-| --- |
-|-----------------------------------------------------------------|
+| <h2>Hospital Management System</h2>                               |
+|-------------------------------------------------------------------|
+| ----------------------------------------------------------------- |
 
 ![Java](https://img.shields.io/badge/Java-17.0.2_LTS-red) 
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.5.5-green)
