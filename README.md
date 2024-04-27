@@ -1,5 +1,6 @@
-<h2>Hospital Management System</h2>
-*-----------------------------------*
+| <h2>Hospital Management System</h2> |
+| --- |
+|-----------------------------------------------------------------|
 
 This is the simple hospital management system built using the spring boot framework.
 
