@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <link th:href="@{/css/AdminPage.css}" rel="stylesheet" type="text/css">
+    <title>Tacle Health Care | HMS | Welcome Admin</title>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Tacle Health care</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item px-2">
+                        <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
+                    </li>
+                    <li class="nav-item px-2">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-custom-primary">Add User</button>
+                            <button type="button" class="btn btn-custom-primary dropdown-toggle dropdown-toggle-split"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" data-bs-toggle="modal"
+                                       data-bs-target="#addAdminUser">Admin</a>
+                                </li>
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addDoctorUser">Doctor</a>
+                                </li>
+                                <li><a class="dropdown-item" data-bs-toggle="modal"
+                                       data-bs-target="#addNurseUser">Nurse</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="modal"
+                                       data-bs-target="#addStaffUser">Staff</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="modal"
+                                       data-bs-target="#addPatient">Patient</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item px-2">
+                        <div class="logged-in-account d-flex align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"
+                                 fill="none">
+                                <path d="M24 4C18.4772 4 14 8.47715 14 14C14 19.5228 18.4772 24 24 24C29.5228 24 34 19.5228 34 14C34 8.47715 29.5228 4 24 4ZM16.5 14C16.5 9.85786 19.8579 6.5 24 6.5C28.1421 6.5 31.5 9.85786 31.5 14C31.5 18.1421 28.1421 21.5 24 21.5C19.8579 21.5 16.5 18.1421 16.5 14ZM12.2499 28C9.90326 28 8.00002 29.9013 8 32.2489L8 33C8 36.7555 9.94167 39.5669 12.9202 41.3802C15.8491 43.1633 19.7861 44 24 44C28.2139 44 32.1509 43.1633 35.0798 41.3802C38.0583 39.5669 40 36.7555 40 33L40 32.2487C40 29.9011 38.0967 28 35.7502 28H12.2499ZM10.5 32.2489C10.5 31.283 11.283 30.5 12.2499 30.5H35.7502C36.7171 30.5 37.5 31.2829 37.5 32.2488L37.5 33C37.5 35.7444 36.1398 37.8081 33.7798 39.2448C31.3703 40.7117 27.9323 41.5 24 41.5C20.0677 41.5 16.6297 40.7117 14.2202 39.2448C11.8602 37.8081 10.5 35.7444 10.5 33L10.5 32.2489Z"
+                                      fill="#212121"/>
+                            </svg>
+                            <div class="ps-1" th:text="${adminDetails.getFullUserName()}">
+
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    Admin Name:<P th:text="${adminDetails.getFullUserName()}"></P>
+    Admin Email:<P th:text="${adminDetails.getUsername()}"></P>
+    Shift Start Time:<P th:text="${adminDetails.getTimeShiftStart()}"></P>
+    Shift End Time:<P sec:authentication="principal.TimeShiftEnd"></P>
+    <div sec:authorize="isAuthenticated()">
+        <a href="javascript: document.logoutForm.submit()">Sign out</a>
+        <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+            <input hidden type="submit" value="Sign Out"/>
+        </form>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="addAdminUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Enter New Admin Details:</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/addAdminUser}" th:object="${addHmsUsers}" th:method="post" method="post"
+                          class="row g-3">
+                        <div class="col-md-6">
+                            <label for="inputName" class="form-label">Enter Name</label>
+                            <input type="text" th:field="*{userName}" required class="form-control" id="inputName">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail" class="form-label">Enter Email</label>
+                            <input type="email" th:field="*{email}" required class="form-control" id="inputEmail">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputMNumber" class="form-label">Enter Mobile no.</label>
+                            <input type="tel" th:field="*{mobileNumber}" required minlength="9" maxlength="10"
+                                   class="form-control" id="inputMNumber">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4" class="form-label">Password</label>
+                            <input type="password" th:field="*{password}" required class="form-control"
+                                   id="inputPassword4">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputRole" class="form-label">Role</label>
+                            <input type="text" th:field="*{role}" name="ADMIN" class="form-control disabled"
+                                   readonly="readonly" id="inputRole" value="ADMIN" th:value="ADMIN"
+                                   placeholder="ADMIN">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputShiftStartTime" class="form-label">Enter Shift Start Time</label>
+                            <input type="time" th:field="*{timeShiftStart}" required class="form-control"
+                                   id="inputShiftStartTime">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputShiftEndTime" class="form-label">Enter Shift End Time</label>
+                            <input type="time" required th:field="*{timeShiftEnd}" class="form-control"
+                                   id="inputShiftEndTime">
+                        </div>
+                        <!--<div class="col-md-4">
+                            <label for="inputState" class="form-label">State</label>
+                            <select id="inputState" class="form-select">
+                                <option selected>Choose...</option>
+                                <option>...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="inputZip" class="form-label">Zip</label>
+                            <input type="text" class="form-control" id="inputZip">
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="gridCheck">
+                                <label class="form-check-label" for="gridCheck">
+                                    Check me out
+                                </label>
+                            </div>
+                        </div>-->
+
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-custom-primary">Add Admin</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addDoctorUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Enter New Doctor Details:</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/addDoctorUser}" th:object="${addHmsUsers}" th:method="post" method="post"
+                          class="row g-3">
+                        <div class="col-md-6">
+                            <label for="inputDoctorName" class="form-label">Enter Name</label>
+                            <input type="text" th:field="*{userName}" required class="form-control"
+                                   id="inputDoctorName">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputDoctorEmail" class="form-label">Enter Email</label>
+                            <input type="email" th:field="*{email}" required class="form-control" id="inputDoctorEmail">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputDoctorMNumber" class="form-label">Enter Mobile no.</label>
+                            <input type="tel" th:field="*{mobileNumber}" required minlength="9" maxlength="10"
+                                   class="form-control" id="inputDoctorMNumber">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputDoctorPassword4" class="form-label">Password</label>
+                            <input type="password" th:field="*{password}" required class="form-control"
+                                   id="inputDoctorPassword4">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputDoctorRole" class="form-label">Role</label>
+                            <input type="text" th:field="*{role}" name="DOCTOR" class="form-control disabled"
+                                   readonly="readonly" id="inputDoctorRole" value="DOCTOR" th:value="DOCTOR"
+                                   placeholder="DOCTOR">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputDoctorSpeciality" class="form-label">Doctor Speciality</label>
+                            <input type="text" th:field="*{speciality}" required class="form-control"
+                                   id="inputDoctorSpeciality" placeholder="Eg:Cardiologist">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputDoctorShiftStartTime" class="form-label">Enter Shift Start Time</label>
+                            <input type="time" th:field="*{timeShiftStart}" required class="form-control"
+                                   id="inputDoctorShiftStartTime">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputDoctorShiftEndTime" class="form-label">Enter Shift End Time</label>
+                            <input type="time" required th:field="*{timeShiftEnd}" class="form-control"
+                                   id="inputDoctorShiftEndTime">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-custom-primary">Add Doctor</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addNurseUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Enter New Nurse Details:</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/addNurseUser}" th:object="${addHmsUsers}" th:method="post" method="post"
+                          class="row g-3">
+                        <div class="col-md-6">
+                            <label for="inputNurseName" class="form-label">Enter Name</label>
+                            <input type="text" th:field="*{userName}" required class="form-control" id="inputNurseName">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputNurseEmail" class="form-label">Enter Email</label>
+                            <input type="email" th:field="*{email}" required class="form-control" id="inputNurseEmail">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputNurseMNumber" class="form-label">Enter Mobile no.</label>
+                            <input type="tel" th:field="*{mobileNumber}" required minlength="9" maxlength="10"
+                                   class="form-control" id="inputNurseMNumber">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputNursePassword4" class="form-label">Password</label>
+                            <input type="password" th:field="*{password}" required class="form-control"
+                                   id="inputNursePassword4">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputNurseRole" class="form-label">Role</label>
+                            <input type="text" th:field="*{role}" name="NURSE" class="form-control disabled"
+                                   readonly="readonly" id="inputNurseRole" value="NURSE" th:value="NURSE"
+                                   placeholder="NURSE">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputNurseShiftStartTime" class="form-label">Enter Shift Start Time</label>
+                            <input type="time" th:field="*{timeShiftStart}" required class="form-control"
+                                   id="inputNurseShiftStartTime">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputNurseShiftEndTime" class="form-label">Enter Shift End Time</label>
+                            <input type="time" required th:field="*{timeShiftEnd}" class="form-control"
+                                   id="inputNurseShiftEndTime">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-custom-primary">Add Nurse</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addStaffUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Enter New Staff Details:</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/addStaffUser}" th:object="${addHmsUsers}" th:method="post" method="post"
+                          class="row g-3">
+                        <div class="col-md-6">
+                            <label for="inputStaffName" class="form-label">Enter Name</label>
+                            <input type="text" th:field="*{userName}" required class="form-control" id="inputStaffName">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputStaffEmail" class="form-label">Enter Email</label>
+                            <input type="email" th:field="*{email}" required class="form-control" id="inputStaffEmail">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputStaffMNumber" class="form-label">Enter Mobile no.</label>
+                            <input type="tel" th:field="*{mobileNumber}" required minlength="9" maxlength="10"
+                                   class="form-control" id="inputStaffMNumber">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputStaffPassword4" class="form-label">Password</label>
+                            <input type="password" th:field="*{password}" required class="form-control"
+                                   id="inputStaffPassword4">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputStaffRole" class="form-label">Role</label>
+                            <input type="text" th:field="*{role}" name="MAINTENANCE_STAFF" class="form-control disabled"
+                                   readonly="readonly" id="inputStaffRole" value="MAINTENANCE_STAFF"
+                                   th:value="MAINTENANCE_STAFF" placeholder="MAINTENANCE_STAFF">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputStaffCategory" class="form-label">Staff Category</label>
+                            <select id="inputStaffCategory" th:field="*{staffCatagory}" class="form-select">
+                                <option selected th:value="Choose..." th:text="Choose..."></option>
+                                <option th:value="SECURITY_STAFF" th:text="SECURITY_STAFF"></option>
+                                <option th:value="CLEANING_STAFF" th:text="CLEANING_STAFF"></option>
+                                <option th:value="EQUIPMENT_MAINTENANCE_STAFF"
+                                        th:text="EQUIPMENT_MAINTENANCE_STAFF"></option>
+                                <option th:value="MEDICINE_MAINTENANCE_STAFF"
+                                        th:text="MEDICINE_MAINTENANCE_STAFF"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputStaffShiftStartTime" class="form-label">Enter Shift Start Time</label>
+                            <input type="time" th:field="*{timeShiftStart}" required class="form-control"
+                                   id="inputStaffShiftStartTime">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputStaffShiftEndTime" class="form-label">Enter Shift End Time</label>
+                            <input type="time" required th:field="*{timeShiftEnd}" class="form-control"
+                                   id="inputStaffShiftEndTime">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-custom-primary">Add Staff</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addPatient" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Enter New Patient Details:</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/addPatient}" th:object="${addHmsPatient}" th:method="post" method="post"
+                          class="row g-3">
+                        <div class="col-md-6">
+                            <label for="inputPatientName" class="form-label">Enter Name:</label>
+                            <input type="text" th:field="*{patientName}" required class="form-control" id="inputPatientName">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPatientEmail" class="form-label">Enter Email:</label>
+                            <input type="email" th:field="*{email}" required class="form-control"
+                                   id="inputPatientEmail">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPatientMNumber" class="form-label">Enter Mobile no.</label>
+                            <input type="tel" th:field="*{mobileNumber}" required minlength="9" maxlength="10"
+                                   class="form-control" id="inputPatientMNumber">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputStatus" class="form-label">Patient Current Status:</label>
+                            <select id="inputStatus" th:field="*{status}" required class="form-select">
+                                <option selected th:value="UNDER_DIAGNOSIS" th:text="UNDER_DIAGNOSIS"></option>
+                                <option th:value="CRITICAL" th:text="CRITICAL"></option>
+                                <option th:value="STABLE" th:text="STABLE"></option>
+                                <option th:value="DISCHARGED" th:text="DISCHARGED"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputDelegateToDoctor" class="form-label">Delegate to Doctor:</label>
+                            <select id="inputDelegateToDoctor" th:field="*{delegateToDoctor}" required
+                                    class="form-select" placeholder="Eg:doctor@mail.com">
+                                <option selected th:value="Choose..." th:text="Choose..."></option>
+                                <option th:each="doctorsMail:${doctorsMail}" th:text="${doctorsMail.email}"
+                                        th:value="${doctorsMail.email}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputAdmittedDateTime" class="form-label">Admitted Date and Time:</label>
+                            <input type="datetime-local" th:field="*{admittedDateTime}" required class="form-control"
+                                   id="inputAdmittedDateTime">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-custom-primary">Add Patient</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    Admin HMS users:
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Sno.</th>
+            <th scope="col">Admin Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Mobile no.</th>
+            <th scope="col">Shift Start Time</th>
+            <th scope="col">Shift End time</th>
+            <th scope="col">Edit/Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="adminHmsUsers:${adminHmsUsers}">
+            <tr>
+                <th scope="row" th:text="${adminHmsUsers.id}"></th>
+                <td th:text="${adminHmsUsers.userName}"></td>
+                <td th:text="${adminHmsUsers.email}"></td>
+                <td th:text="${adminHmsUsers.mobileNumber}"></td>
+                <td th:text="${adminHmsUsers.timeShiftStart}"></td>
+                <td th:text="${adminHmsUsers.timeShiftEnd}"></td>
+                <td><a class=" btn btn-custom-primary d-flex align-items-center justify-content-around" data-bs-toggle="modal"
+                       th:data-bs-target="'#admin-'+${adminHmsUsers.id}"><span><svg id="edit-svg" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M41.9741 6.02532C39.2767 3.32791 34.9033 3.32804 32.2061 6.02562L8.03755 30.1971C7.27584 30.9589 6.73303 31.9115 6.46599 32.9551L4.03904 42.4402C3.9296 42.8679 4.05389 43.3216 4.36603 43.6338C4.67816 43.946 5.13183 44.0704 5.55956 43.9611L15.0458 41.5365C16.0904 41.2695 17.0439 40.7263 17.8062 39.9639L41.9744 15.7928C44.6714 13.0954 44.6713 8.7225 41.9741 6.02532ZM33.9739 7.79328C35.6949 6.07212 38.4853 6.07203 40.2064 7.79309C41.9273 9.514 41.9274 12.3041 40.2066 14.0251L37.9999 16.2321L31.7676 9.99984L33.9739 7.79328ZM30 11.7677L36.2322 17.9999L16.0383 38.1963C15.5933 38.6414 15.0366 38.9585 14.4268 39.1144L6.9838 41.0167L8.88796 33.5749C9.04386 32.9656 9.36075 32.4094 9.80542 31.9647L30 11.7677Z" fill="#212121"/>
+                    </svg></span>Edit</a></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+    <br>
+    <table class="table">
+        Doctors HMS Users:
+        <thead>
+        <tr>
+            <th scope="col">Sno.</th>
+            <th scope="col">Doctor Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Mobile no.</th>
+            <th scope="col">Speciality</th>
+            <th scope="col">Shift Start Time</th>
+            <th scope="col">Shift End time</th>
+            <th scope="col">Edit/Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="doctorHmsUsers:${doctorsMail}">
+            <tr>
+                <th scope="row" th:text="${doctorHmsUsers.id}"></th>
+                <td th:text="${doctorHmsUsers.userName}"></td>
+                <td th:text="${doctorHmsUsers.email}"></td>
+                <td th:text="${doctorHmsUsers.mobileNumber}"></td>
+                <td th:text="${doctorHmsUsers.speciality}"></td>
+                <td th:text="${doctorHmsUsers.timeShiftStart}"></td>
+                <td th:text="${doctorHmsUsers.timeShiftEnd}"></td>
+                <td><a class=" btn btn-custom-primary d-flex align-items-center justify-content-around" data-bs-toggle="modal"
+                       th:data-bs-target="'#admin-'+${doctorHmsUsers.id}"><span><svg id="edit-svg" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M41.9741 6.02532C39.2767 3.32791 34.9033 3.32804 32.2061 6.02562L8.03755 30.1971C7.27584 30.9589 6.73303 31.9115 6.46599 32.9551L4.03904 42.4402C3.9296 42.8679 4.05389 43.3216 4.36603 43.6338C4.67816 43.946 5.13183 44.0704 5.55956 43.9611L15.0458 41.5365C16.0904 41.2695 17.0439 40.7263 17.8062 39.9639L41.9744 15.7928C44.6714 13.0954 44.6713 8.7225 41.9741 6.02532ZM33.9739 7.79328C35.6949 6.07212 38.4853 6.07203 40.2064 7.79309C41.9273 9.514 41.9274 12.3041 40.2066 14.0251L37.9999 16.2321L31.7676 9.99984L33.9739 7.79328ZM30 11.7677L36.2322 17.9999L16.0383 38.1963C15.5933 38.6414 15.0366 38.9585 14.4268 39.1144L6.9838 41.0167L8.88796 33.5749C9.04386 32.9656 9.36075 32.4094 9.80542 31.9647L30 11.7677Z" fill="#212121"/>
+                    </svg></span>Edit</a></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+    <br>
+    <table class="table">
+        Staff HMS Users:
+        <thead>
+        <tr>
+            <th scope="col">Sno.</th>
+            <th scope="col">Staff Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Mobile no.</th>
+            <th scope="col">Staff Category</th>
+            <th scope="col">Shift Start Time</th>
+            <th scope="col">Shift End time</th>
+            <th scope="col">Edit/Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="staffHmsUser:${staffHmsUsers}">
+            <tr>
+                <th scope="row" th:text="${staffHmsUser.id}"></th>
+                <td th:text="${staffHmsUser.userName}"></td>
+                <td th:text="${staffHmsUser.email}"></td>
+                <td th:text="${staffHmsUser.mobileNumber}"></td>
+                <td th:text="${staffHmsUser.staffCatagory}"></td>
+                <td th:text="${staffHmsUser.timeShiftStart}"></td>
+                <td th:text="${staffHmsUser.timeShiftEnd}"></td>
+                <td><a class=" btn btn-custom-primary d-flex align-items-center justify-content-around" data-bs-toggle="modal"
+                       th:data-bs-target="'#admin-'+${staffHmsUser.id}"><span><svg id="edit-svg" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M41.9741 6.02532C39.2767 3.32791 34.9033 3.32804 32.2061 6.02562L8.03755 30.1971C7.27584 30.9589 6.73303 31.9115 6.46599 32.9551L4.03904 42.4402C3.9296 42.8679 4.05389 43.3216 4.36603 43.6338C4.67816 43.946 5.13183 44.0704 5.55956 43.9611L15.0458 41.5365C16.0904 41.2695 17.0439 40.7263 17.8062 39.9639L41.9744 15.7928C44.6714 13.0954 44.6713 8.7225 41.9741 6.02532ZM33.9739 7.79328C35.6949 6.07212 38.4853 6.07203 40.2064 7.79309C41.9273 9.514 41.9274 12.3041 40.2066 14.0251L37.9999 16.2321L31.7676 9.99984L33.9739 7.79328ZM30 11.7677L36.2322 17.9999L16.0383 38.1963C15.5933 38.6414 15.0366 38.9585 14.4268 39.1144L6.9838 41.0167L8.88796 33.5749C9.04386 32.9656 9.36075 32.4094 9.80542 31.9647L30 11.7677Z" fill="#212121"/>
+                    </svg></span>Edit</a></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+    <br>
+    <table class="table">
+        Patients Registered in HMS:
+        <thead>
+        <tr>
+            <th scope="col">Sno.</th>
+            <th scope="col">Patient Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Mobile no.</th>
+            <th scope="col">Diagnosis</th>
+            <th scope="col">Status</th>
+            <th scope="col">Admitted Date & Time</th>
+            <th scope="col">Discharged Date & Time</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="patients:${allPatients}">
+            <tr>
+                <th scope="row" th:text="${patients.id}"></th>
+                <td th:text="${patients.patientName}"></td>
+                <td th:text="${patients.email}"></td>
+                <td th:text="${patients.mobileNumber}"></td>
+                <td th:text="${patients.diagnosis}"></td>
+                <td th:text="${patients.status}"></td>
+                <td th:text="${#temporals.format(patients.admittedDateTime, 'dd-MM-yyyy HH:mm')}"></td>
+                <td th:text="${#temporals.format(patients.dischargedDateTime, 'dd-MM-yyyy HH:mm')}"></td>
+                <td><a class=" btn btn-custom-primary d-flex align-items-center justify-content-around" data-bs-toggle="modal"
+                       th:data-bs-target="'#patient-'+${patients.id}"><span><svg id="edit-svg" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M41.9741 6.02532C39.2767 3.32791 34.9033 3.32804 32.2061 6.02562L8.03755 30.1971C7.27584 30.9589 6.73303 31.9115 6.46599 32.9551L4.03904 42.4402C3.9296 42.8679 4.05389 43.3216 4.36603 43.6338C4.67816 43.946 5.13183 44.0704 5.55956 43.9611L15.0458 41.5365C16.0904 41.2695 17.0439 40.7263 17.8062 39.9639L41.9744 15.7928C44.6714 13.0954 44.6713 8.7225 41.9741 6.02532ZM33.9739 7.79328C35.6949 6.07212 38.4853 6.07203 40.2064 7.79309C41.9273 9.514 41.9274 12.3041 40.2066 14.0251L37.9999 16.2321L31.7676 9.99984L33.9739 7.79328ZM30 11.7677L36.2322 17.9999L16.0383 38.1963C15.5933 38.6414 15.0366 38.9585 14.4268 39.1144L6.9838 41.0167L8.88796 33.5749C9.04386 32.9656 9.36075 32.4094 9.80542 31.9647L30 11.7677Z" fill="#212121"/>
+                    </svg></span>Edit</a></td>
+                <td><a class=" btn btn-custom-primary d-flex align-items-center justify-content-around" th:href="@{/deletePatientViaAdmin/{email}(email=${patients.email})}"><span><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="delete-svg" d="M24 7.25C27.1018 7.25 29.6299 9.70602 29.7458 12.7794L29.75 13H37C37.6904 13 38.25 13.5596 38.25 14.25C38.25 14.8972 37.7581 15.4295 37.1278 15.4935L37 15.5H35.909L34.2058 38.0698C34.0385 40.2867 32.191 42 29.9679 42H18.0321C15.809 42 13.9615 40.2867 13.7942 38.0698L12.09 15.5H11C10.3528 15.5 9.82047 15.0081 9.75645 14.3778L9.75 14.25C9.75 13.6028 10.2419 13.0705 10.8722 13.0065L11 13H18.25C18.25 9.82436 20.8244 7.25 24 7.25ZM33.4021 15.5H14.5979L16.2871 37.8817C16.356 38.7945 17.1167 39.5 18.0321 39.5H29.9679C30.8833 39.5 31.644 38.7945 31.7129 37.8817L33.4021 15.5ZM27.25 20.75C27.8972 20.75 28.4295 21.2419 28.4935 21.8722L28.5 22V33C28.5 33.6904 27.9404 34.25 27.25 34.25C26.6028 34.25 26.0705 33.7581 26.0065 33.1278L26 33V22C26 21.3096 26.5596 20.75 27.25 20.75ZM20.75 20.75C21.3972 20.75 21.9295 21.2419 21.9935 21.8722L22 22V33C22 33.6904 21.4404 34.25 20.75 34.25C20.1028 34.25 19.5705 33.7581 19.5065 33.1278L19.5 33V22C19.5 21.3096 20.0596 20.75 20.75 20.75ZM24 9.75C22.267 9.75 20.8508 11.1065 20.7551 12.8156L20.75 13H27.25C27.25 11.2051 25.7949 9.75 24 9.75Z" fill="#212121"/>
+</svg></span>Delete</a></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+    <!--Update Patient Modal-->
+    <th:block th:each="patients:${allPatients}">
+        <div class="modal fade" th:id="'patient-'+${patients.id}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" th:text="'Update Staus of '+${patients.patientName}+' @ '+${patients.email}">Enter New Patient Details:</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{'/updatePatientDischargedDateTime/'+${patients.email}}" th:object="${addHmsPatient}" th:method="post" method="post"
+                              class="row g-3">
+                            <div class="col-md-6">
+                                <label th:for="'input '+${patients.id}+' name'" class="form-label">Enter Name:</label>
+                                <input type="text" th:field="*{patientName}" readonly="readonly" th:placeholder="${patients.patientName}" class="form-control"
+                                       th:id="'input '+${patients.id}+' name'">
+                            </div>
+                            <div class="col-md-6">
+                                <label th:for="'input '+${patients.id}+' email'" class="form-label">Enter Email:</label>
+                                <input type="email" th:field="*{email}" readonly="readonly" th:placeholder="${patients.email}" class="form-control"
+                                       th:id="'input '+${patients.id}+' email'">
+                            </div>
+                            <div class="col-md-6">
+                                <label th:for="'input '+${patients.id}+' MNumber'" class="form-label">Enter Mobile no.</label>
+                                <input type="tel" th:field="*{mobileNumber}" readonly="readonly" th:placeholder="${patients.mobileNumber}" minlength="9" maxlength="10"
+                                       class="form-control" th:id="'input '+${patients.id}+' MNumber'">
+                            </div>
+                            <div class="col-md-6">
+                                <label th:for="'input '+${patients.id}+' Status'" class="form-label">Patient Current Status:</label>
+                                <input type="text" th:id="'input '+${patients.id}+' Status'" th:field="*{status}"
+                                       readonly="readonly"
+                                       th:value="${patients.status}" th:placeholder="${patients.status}"
+                                       class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label th:for="'input '+${patients.id}+' DelegateToDoctor'" class="form-label">Delegate to Doctor:</label>
+                                <input type="email" th:id="'input '+${patients.id}+' DelegateToDoctor'" th:field="*{delegateToDoctor}"
+                                       readonly="readonly"
+                                       th:value="${patients.delegateToDoctor}" th:placeholder="${patients.delegateToDoctor}"
+                                       class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label th:for="'input '+${patients.id}+' dischargedDateTime'" class="form-label">Discharged Date and Time:</label>
+                                <input type="datetime-local" th:field="*{dischargedDateTime}" required class="form-control"
+                                       th:id="'input '+${patients.id}+' dischargedDateTime'">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-custom-primary">Update Patient Details:</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </th:block>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
+</div>
+</body>
+</html>

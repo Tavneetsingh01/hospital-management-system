@@ -1,0 +1,27 @@
+@import url(GlobalVariables.css);
+
+.showcase-image {
+    max-height: 100vh;
+    min-height: 100vh;
+    max-width: 100%;
+    min-width: 100%;
+    object-fit: cover;
+}
+
+.login-showcase {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    min-width: 23rem;
+    max-width: 26rem;
+    min-height: auto;
+    max-height: auto;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    background-color: #f4f4f4;
+    box-shadow: rgb(0 0 0 / 10%) 0px 0px 10px 2px;
+}
+

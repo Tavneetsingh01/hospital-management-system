@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Nurse</title>
+</head>
+<body>
+<div class="container">
+    Nurse Name:<P th:text="${nurseDetails.getFullUserName()}"></P>
+    Nurse Email:<P th:text="${nurseDetails.getUsername()}"></P>
+    Shift Start Time:<P th:text="${nurseDetails.getTimeShiftStart()}"></P>
+    Shift End Time:<P sec:authentication="principal.TimeShiftEnd"></P>
+</div>
+<div sec:authorize="isAuthenticated()">
+    <a href="javascript: document.logoutForm.submit()">Sign out</a>
+    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+        <input hidden type="submit" value="Sign Out" />
+    </form>
+</div>
+
+</body>
+</html>

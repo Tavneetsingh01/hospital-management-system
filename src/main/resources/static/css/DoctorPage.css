@@ -1,0 +1,24 @@
+@import url(GlobalVariables.css);
+svg{
+    width:1.5rem;
+    height:auto;
+}
+
+@media screen
+and (min-device-width: 1200px)
+and (max-device-width: 1600px)
+and (-webkit-min-device-pixel-ratio: 1) {
+    .navbar-brand {
+        margin-right: 48vw;
+    }
+
+    #edit-svg{
+        width:1.3rem;
+        height:auto;
+    }
+
+    #delete-svg{
+        width:1.3rem;
+        height:auto;
+    }
+}
